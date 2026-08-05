@@ -31,9 +31,11 @@ steps:
 - task: VSTest@2
   inputs:
     platform: '$(buildPlatform)'
-    
+
 - task: DotNetCoreCLI@2
   inputs:
     command: 'publish'
     publishWebProjects: true
-    configuration: '$(buildConfiguration)'
+    # configuration: '$(buildConfiguration)'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: true # Zips the bundle for easy deployment
