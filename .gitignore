@@ -1,0 +1,25 @@
+## Core .NET Build Outputs
+bin/
+obj/
+
+## Rider/Resharper/JetBrains IDE Cache
+.idea/
+*.sln.iml
+
+## Visual Studio Cache & User Files
+.vs/
+*.user
+*.userosscache
+*.suo
+
+## VS Code Workspace Configurations
+.vscode/
+
+## NuGet Packages
+*.nupkg
+# Objective-C/Swift package manager artifacts if building cross-platform
+packages/
+
+## Test & Code Coverage Artifacts
+TestResults/
+*.clog
