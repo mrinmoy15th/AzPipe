@@ -1,0 +1,30 @@
+# Stage 1: Base runtime environment
+FROM ://microsoft.com AS base
+WORKDIR /app
+EXPOSE 8080
+EXPOSE 8081
+
+# Stage 2: SDK build environment
+FROM ://microsoft.com AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+
+# Copy csproj and restore dependencies (helps leverage Docker caching)
+COPY ["JoonsWeb.csproj", "."]
+RUN dotnet restore "./JoonsWeb.csproj"
+
+# Copy the remaining source code and build
+COPY . .
+WORKDIR "/src/."
+RUN dotnet build "JoonsWeb.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+# Stage 3: Publish the application
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "JoonsWeb.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+# Stage 4: Final minimal runtime image
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "JoonsWeb.dll"]
